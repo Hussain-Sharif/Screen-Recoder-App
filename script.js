@@ -4,6 +4,8 @@ let recordBtn=document.querySelector('.record-btn')
 let captureBtnCont=document.querySelector('.capture-btn-cont')
 let captureBtn=document.querySelector('.Capture-btn')
 
+let transparentColor="transparent"
+
 let contraints={
     video:true,
     audio:false
@@ -53,29 +55,45 @@ const launchRecording=()=>{
             stopTimer()
         }
     })
-})
-
-// capture Code:
-captureBtnCont.addEventListener('click',(e)=>{
-    captureBtn.classList.add('scale-capture')
-
-    const canvasEle=document.createElement('canvas')
-    let canvasContext=canvasEle.getContext('2d')
     
-    canvasEle.width=videoEle.width
-    canvasEle.height=videoEle.height
-    canvasContext.drawImage(videoEle,0,0,canvasEle.width,canvasEle.height) // Destination co-ordinates
-    
-    const imageURL=canvasEle.toDataURL()
-    let a=document.createElement('a')
-    a.href=imageURL
-    a.download="image.jpg"
-    a.click()
-    setTimeout(()=>{
-        captureBtn.classList.remove('scale-capture')
-    },1000)
-})
+    })
+    // capture Code:
+    captureBtnCont.addEventListener('click',(e)=>{
+        captureBtn.classList.add('scale-capture')
 
+        const canvasEle=document.createElement('canvas')
+        let canvasContext=canvasEle.getContext('2d')
+        
+        canvasEle.width=videoEle.width
+        canvasEle.height=videoEle.height
+        canvasContext.drawImage(videoEle,0,0,canvasEle.width,canvasEle.height) // Destination co-ordinates
+                
+        const imageURL=canvasEle.toDataURL("image/jpeg", 0.5);
+        let a=document.createElement('a')
+        a.href=imageURL
+        a.download="image.jpeg"
+        a.click()
+
+        // filtering
+        canvasContext.fillStyle=transparentColor
+        canvasContext.fillRect(0,0,canvasEle.width,canvasEle.height)
+        
+        setTimeout(()=>{
+            captureBtn.classList.remove('scale-capture')
+        },1000)
+    })
+        // filtering 
+        
+        let filter = document.querySelector('.filter-layer')
+    
+        let allFilter=document.querySelectorAll('.filter')
+        allFilter.forEach((eachFilterEle)=>{
+            eachFilterEle.addEventListener('click',()=>{
+                transparentColor=getComputedStyle(eachFilterEle).getPropertyValue("background-color")
+                filter.style.backgroundColor=transparentColor
+    
+            })
+        })
 }
 
 const startRecordingEle=document.querySelector(".start-Record-btn")
@@ -111,6 +129,8 @@ function stopTimer(){
     clearInterval(timerID)
     timerEle.style.display="none"
 }
+
+
 
 
 

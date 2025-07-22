@@ -1,150 +1,133 @@
-* {
-  box-sizing: border-box;
-}
-
 body {
+  min-height: 100vh;
   margin: 0;
-  font-family: system-ui, sans-serif;
-  color: black;
-  background-color: white;
-}
-
-.start-Record-btn{
-  z-index: 10;
-
-}
-
-.vid-cont{
-  padding: 2px;
-  position: relative;
-  height: 100vh;
-  width: 100vw;
-}
-
-.vid-cont video{
-  height: 100%;
-  width: 100%;
-}
-
-.action-cont{
-  height: 12rem;
-  width: 5rem;
-  /* background-color: lightgrey; */
-  position: absolute;
-  top:12rem;
-  right:5rem;
+  background: linear-gradient(135deg, #282c34 0%, #3a4a5c 100%);
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+  color: #f4f4f4;
   display: flex;
-  gap: 5px;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
-  z-index: 5;
-}
-
-.action-cont > *{
-  width: 120%;
-  height: 5rem;
-  border-radius: 100%;
-  border: wheat solid 2px;
-  display: flex;
   justify-content: center;
-  padding: 25px;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-}
-
-.record-btn{
-  background-color: red;
-  height: 3rem;
-  width: 100rem;
-  cursor: pointer;
-  border-radius: 50%;
-}
-.scale-record{
-  animation-name: scale-record;
-  animation-iteration-count: infinite;
-  animation-duration: 1s;
-}
-
-.Capture-btn{
-  background-color: white;
-  height: 3rem;
-  width: 100rem;
-  cursor: pointer;
-  border-radius: 50%;
-}
-.scale-capture{
-  animation-name: scale-record;
-  animation-iteration-count: 1;
-  animation-duration: 1s;
-}
-
-@keyframes scale-record {
-  0%{
-    transform: scale(0.8);
-  }
-  100%{
-    transform: scale(1.1);
-  }
-}
-
-.timer-cont{
-  height: 15rem;
-  width: 5rem;
-  padding: 5px;
-  position: absolute;
-  top: 15rem;
-  left: 0rem;
-  color:aqua;
-  font-size: smaller;
-}
-
-.timer{
-  display: none;
-}
-
-
-
-.filter-cont{
-  height: 16rem;
-  width: 5rem;
-  position: absolute;
-  top: 2rem;
-  left: 2rem;
-  border: solid red 1px;
-  overflow-y: auto;
-  z-index: 2;
-  /* */
-}
-
-.filter{
-  background-image: url('https://picsum.photos/seed/picsum/200/300');
-  height: 4rem;
-  background-position: center;
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  background-blend-mode: color-burn;
-  margin: 10px;
-}
-
-.o{
-  background-color: rgba(255, 127, 80, 0.76);
-}
-.b{
-  background-color: rgba(0, 0, 255, 0.342);
-}
-.p{
-  background-color: rgba(255, 192, 203, 0.582);
-}
-
-.t{
-  background-color: transparent;
-}
-
-.filter-layer{
-  height: 100vh;
   width: 100vw;
-  z-index: 1;
-  position: absolute;
-  top: 0;
-  left: 0; 
+  min-height: 100vh;
+}
+
+.recorder-card {
+  background: rgba(40, 44, 52, 0.98);
+  border-radius: 18px;
+  box-shadow: 0 4px 18px rgba(16, 26, 33, 0.22);
+  padding: 2.5rem 2rem;
+  width: 350px;
+  margin: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeIn 0.8s;
+}
+
+.logo {
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  font-size: 2rem;
+}
+
+.controls {
+  display: flex;
+  gap: 0.8rem;
+  margin-bottom: 1.4rem;
+}
+
+.btn {
+  border: none;
+  outline: none;
+  border-radius: 7px;
+  padding: 0.7rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s, transform 0.1s;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+}
+
+.btn:active {
+  transform: translateY(2px) scale(0.97);
+}
+
+.btn-primary {
+  background: #00bcd4;
+  color: #ffffff;
+}
+
+.btn-danger {
+  background: #ff3860;
+  color: #fff;
+}
+
+.btn-secondary {
+  background: #212a34;
+  color: #b3c7e6;
+  border: 1px solid #b3c7e6;
+}
+
+.btn:disabled {
+  background: #7f8c98;
+  color: #d6dae8;
+  cursor: not-allowed;
+}
+
+#preview {
+  width: 100%;
+  min-height: 170px;
+  margin-bottom: 1.2rem;
+  background: #181d23;
+  border-radius: 10px;
+  box-shadow: 0 3px 16px rgba(20, 25, 32, 0.24);
+}
+
+.status-text {
+  min-height: 22px;
+  padding: 0.3em 0.6em;
+  border-radius: 5px;
+  font-size: 0.98em;
+  text-align: center;
+  color: #aedcff;
+  background: rgba(50, 60, 75, 0.17);
+  margin-top: 0.2em;
+  margin-bottom: 0;
+  word-break: break-word;
+}
+
+footer {
+  margin-bottom: 15px;
+  text-align: center;
+  color: #b3c7e6;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(24px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 480px) {
+  .recorder-card {
+    width: 96vw;
+    padding: 1.1rem 0.5rem;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  background: #232939;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2f3c4a;
+  border-radius: 7px;
 }

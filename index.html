@@ -1,47 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Screen Recorder</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="stylesheet" href="styles.css" />
-    <script type="module" src="script.js"></script>
-  </head>
-  <body>
-    <nav>
-      
-    </nav>
-    <main>
-      <div class="vid-cont">
-        <button class="start-Record-btn">Start Recording</button>
-        <video controls autoplay src=""></video>
-        
-        <div class="action-cont">
-          <div class="record-btn-cont">
-            <button class="record-btn">
-              
-            </button>
-          </div>
-          <div class="capture-btn-cont">
-            <button class="Capture-btn scale-capture">
-              
-            </button>
-          </div>
-        </div>
-
-        <div class="timer-cont">
-          <h1 class="timer">00:00:00</h1>
-        </div>
-
-        <div class="filter-cont">
-          <div class="filter o"></div>
-          <div class="filter b"></div>
-          <div class="filter p"></div>
-          <div class="filter t"></div>
-        </div>
-        <div class="filter-layer"></div>
-
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Screen Recorder</title>
+  <link href="style.css" rel="stylesheet">
+</head>
+<body>
+  <main class="app-container">
+    <div class="recorder-card">
+      <h1 class="logo">🖥️ Screen Recorder</h1>
+      <div class="controls">
+        <button id="startBtn" class="btn btn-primary">Start Recording</button>
+        <button id="stopBtn" class="btn btn-danger" disabled>Stop</button>
+        <button id="downloadBtn" class="btn btn-secondary" disabled>Download</button>
       </div>
-    </main>
-  </body>
+      <video id="preview"></video>
+      <p id="status" class="status-text">Ready to record your screen</p>
+    </div>
+    <footer>
+      <small>Made with ❤️ by Hussein Sharif</small>
+    </footer>
+  </main>
+  <script src="script.js"></script>
+</body>
 </html>

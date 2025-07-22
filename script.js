@@ -1,136 +1,84 @@
-let videoEle=document.querySelector('video')
-let recordBtnCont=document.querySelector('.record-btn-cont')
-let recordBtn=document.querySelector('.record-btn')
-let captureBtnCont=document.querySelector('.capture-btn-cont')
-let captureBtn=document.querySelector('.Capture-btn')
+const startBtn = document.getElementById("startBtn");
+const stopBtn = document.getElementById("stopBtn");
+const downloadBtn = document.getElementById("downloadBtn");
+const preview = document.getElementById("preview");
+const status = document.getElementById("status");
 
-let transparentColor="transparent"
+let mediaRecorder = null;
+let recordedChunks = [];
+let stream = null;
 
-let contraints={
-    video:true,
-    audio:false
+function setStatus(message, color = "#aedcff") {
+  status.textContent = message;
+  status.style.color = color;
 }
 
-let recorderFlag=false;
-let recorder
-let chunks=[] // Media is stored in Chunk [chunk by chunk]
+startBtn.addEventListener("click", async () => {
+  try {
+    stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+    preview.srcObject = stream;
+    preview.play();
 
-const launchRecording=()=>{
-    navigator.mediaDevices.getUserMedia(contraints)
-.then((stream)=>{
-    console.log(stream)
-    videoEle.srcObject=stream;
+    mediaRecorder = new MediaRecorder(stream);
+    recordedChunks = [];
+    mediaRecorder.ondataavailable = (e) => {
+      if (e.data.size > 0) {
+        recordedChunks.push(e.data);
+      }
+    };
+    mediaRecorder.onstop = () => {
+      const blob = new Blob(recordedChunks, { type: "video/webm" });
+      preview.srcObject = null;
+      preview.src = URL.createObjectURL(blob);
+      preview.controls = true;
+      preview.play();
+      downloadBtn.disabled = false;
+      setStatus("Recording finished. Ready to download.", "#6effa7");
+    };
+    mediaRecorder.start();
 
-    recorder=new MediaRecorder(stream)
-    recorder.addEventListener("start",(e)=>{
-        chunks=[] // REMOVING THE PREVIOUS chunks to start fresh recording
-    })
+    setStatus("Recording in progress...", "#ffe266");
 
-    recorder.addEventListener('dataavailable',(e)=>{
-        chunks.push(e.data)
-    })
+    startBtn.disabled = true;
+    stopBtn.disabled = false;
+    downloadBtn.disabled = true;
+  } catch (e) {
+    setStatus("Error: Permission denied or no display found.", "#ff3860");
+    console.error(e);
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+  }
+});
 
-    recorder.addEventListener("stop",(e)=>{
-        // To Download the recoding
-        // Convert the Media Chunk data into video
-        let blobData=new Blob(chunks,{type:'video/mp4'})
-        let videoURL=URL.createObjectURL(blobData)
-        let a=document.createElement('a')
-        a.href=videoURL
-        a.download="stream.mp4"
-        a.click()
-    })
+stopBtn.addEventListener("click", () => {
+  if (mediaRecorder && mediaRecorder.state !== "inactive") {
+    mediaRecorder.stop();
+    stream.getTracks().forEach(track => track.stop());
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+  }
+});
 
-    recordBtnCont.addEventListener('click',()=>{
-        if(!recorder) return ;
+downloadBtn.addEventListener("click", () => {
+  if (recordedChunks.length) {
+    const blob = new Blob(recordedChunks, { type: "video/webm" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.style.display = "none";
+    a.href = url;
+    a.download = `screen-record-${Date.now()}.webm`;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      setStatus("Downloaded! Ready for next recording.", "#aedcff");
+    }, 120);
+  }
+});
 
-        recorderFlag=!recorderFlag
-        if(recorderFlag){
-            recorder.start()
-            recordBtn.classList.add('scale-record')
-            startTimer()
-        }else{
-            recorder.stop()
-            recordBtn.classList.remove('scale-record')
-            stopTimer()
-        }
-    })
-    
-    })
-    // capture Code:
-    captureBtnCont.addEventListener('click',(e)=>{
-        captureBtn.classList.add('scale-capture')
-
-        const canvasEle=document.createElement('canvas')
-        let canvasContext=canvasEle.getContext('2d')
-        
-        canvasEle.width=videoEle.width
-        canvasEle.height=videoEle.height
-        canvasContext.drawImage(videoEle,0,0,canvasEle.width,canvasEle.height) // Destination co-ordinates
-                
-        const imageURL=canvasEle.toDataURL("image/jpeg", 0.5);
-        let a=document.createElement('a')
-        a.href=imageURL
-        a.download="image.jpeg"
-        a.click()
-
-        // filtering
-        canvasContext.fillStyle=transparentColor
-        canvasContext.fillRect(0,0,canvasEle.width,canvasEle.height)
-        
-        setTimeout(()=>{
-            captureBtn.classList.remove('scale-capture')
-        },1000)
-    })
-        // filtering 
-        
-        let filter = document.querySelector('.filter-layer')
-    
-        let allFilter=document.querySelectorAll('.filter')
-        allFilter.forEach((eachFilterEle)=>{
-            eachFilterEle.addEventListener('click',()=>{
-                transparentColor=getComputedStyle(eachFilterEle).getPropertyValue("background-color")
-                filter.style.backgroundColor=transparentColor
-    
-            })
-        })
-}
-
-const startRecordingEle=document.querySelector(".start-Record-btn")
-startRecordingEle.addEventListener('click',()=>{
-    launchRecording()
-})
-
-
-
-
-let timerID
-let timerEle=document.querySelector('.timer')
-
-function startTimer(){
-    let counter=0 //Total Seconds
-    timerEle.style.display="block"
-    function displayTimer(){
-        let totalSeconds=counter
-        const hrs=Number.parseInt(totalSeconds/3600)
-        totalSeconds=totalSeconds%3600
-
-        let mins=Number.parseInt(totalSeconds/60)
-        totalSeconds=totalSeconds%60
-
-        let seconds=totalSeconds
-        timerEle.textContent=`${String(hrs).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`
-        counter++;
-    }
-    timerID=setInterval(displayTimer,1000)
-}
-
-function stopTimer(){
-    clearInterval(timerID)
-    timerEle.style.display="none"
-}
-
-
-
-
-
+// Reset UI and status on load
+setStatus("Ready to record your screen");
+stopBtn.disabled = true;
+downloadBtn.disabled = true;
+preview.controls = false;

@@ -3,25 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Screen Recorder</title>
-  <link href="style.css" rel="stylesheet">
+  <title>Recorderings</title>
+  <link href="styles.css" rel="stylesheet">
 </head>
 <body>
   <main class="app-container">
     <div class="recorder-card">
-      <h1 class="logo">🖥️ Screen Recorder</h1>
-      <div class="controls">
-        <button id="startBtn" class="btn btn-primary">Start Recording</button>
-        <button id="stopBtn" class="btn btn-danger" disabled>Stop</button>
-        <button id="downloadBtn" class="btn btn-secondary" disabled>Download</button>
+      <div class="left-card">
+        <h1 class="logo">🖥️ Recorderings</h1>
+        <div class="controls">
+          <button id="startBtn" class="btn btn-primary">Start Recording</button>
+          <button id="stopBtn" class="btn btn-danger" disabled>Stop</button>
+        </div>
+        <div class="user-choice">
+          <!-- 
+            Use 'selected' class for active; toggle with JS.
+            Add more buttons in future if needed!
+          -->
+          <button id="self-recording" class="btn btn-toggle selected" data-mode="audio">My Self</button>
+          <button id="screen-recording" class="btn btn-toggle" data-mode="screen">Screen-Sharing</button>
+          <button id="both-recording" class="btn btn-toggle" data-mode="both">Both</button>
+        </div>
+        <p id="status" class="status-text">Ready to record your screen</p>
       </div>
-      <video id="preview"></video>
-      <p id="status" class="status-text">Ready to record your screen</p>
+      <div class="video-btn-cont">
+        <div class="video-cont">
+          <video id="preview" controls></video>
+        </div>
+        <div class="call-action">
+          <button id="downloadBtn" class="btn btn-download ">Download</button>
+            <!-- Google Drive Integration -->
+          <div class="google-drive-controls">
+            <button id="authBtn" class="btn btn-google">Authorize Google</button>
+            <button id="saveToDriveBtn" class="btn btn-secondary" disabled>Save to Drive</button>
+          </div>
+        </div>
+    </div>
+     
     </div>
     <footer>
-      <small>Made with ❤️ by Hussein Sharif</small>
+      <small>Made with ❤️ by <a href="https://github.com/Hussain-Sharif/" target="_blank">Hussain Sharif</a></small>
     </footer>
   </main>
+  <script src="https://apis.google.com/js/api.js"></script>
   <script src="script.js"></script>
+
 </body>
 </html>
